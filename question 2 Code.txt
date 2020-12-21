@@ -1,0 +1,117 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+
+class CipherDecipher{
+    /**
+     * This method is used to cipher the message (normal) by following steps.
+     * Swap the cases of String - UpperCase letters to LowerCase letters and viceversa.
+     * Reverse the String
+     * Replace the spaces of string with a star character("*")
+     * Replace the characters in the even positions of the string
+     * Append any integer at the last in that String
+     * 
+     * @param normal
+     * @return the ciphered message
+     */
+    public String ciphering(String normal){
+        StringBuffer newStr=new StringBuffer(normal);
+        for(int i = 0; i < normal.length(); i++) {
+            if(Character.isLowerCase(normal.charAt(i))) {
+                newStr.setCharAt(i, Character.toUpperCase(normal.charAt(i))); }
+            else if(Character.isUpperCase(normal.charAt(i))) {
+                newStr.setCharAt(i, Character.toLowerCase(normal.charAt(i))); }}
+        newStr = newStr.reverse();
+        String ciphertext = new String(newStr);
+        ciphertext = ciphertext.replaceAll(" ","\\*");
+        String ciphertext2 = new String();
+        for(int i = 0; i < ciphertext.length(); i++) {
+            if((i+1)%2==0){
+                char ch = ciphertext.charAt(i);
+                if(ch == '*'){
+                    ciphertext2 += (int) '*';}
+                else{
+                    ciphertext2 += (int) ch;}}
+            else if((i+1)%2!=0){
+                char ch = ciphertext.charAt(i);
+                ciphertext2 += ch;}}
+        return ciphertext2 + 3;
+    }
+    /**
+     * This method is used to get the normal text by the reverse process of ciphering.
+     * 
+     * @param ciphered
+     * @return the deciphered message
+     */
+    public String deciphering(String ciphered){
+        String work = ciphered.substring(0,ciphered.length()-1);
+        StringBuffer work2 = new StringBuffer();
+        StringBuffer temp = new StringBuffer();
+        for (char c : work.toCharArray() ) {
+            if(!Character.isLetterOrDigit(c)){
+                if(c == '*'){
+                    if(temp.length()!=0){
+                    work2.append((char) Integer.parseInt(String.valueOf(temp)));
+                    temp = new StringBuffer();}
+                    work2.append(" ");
+                    continue; }
+                else if(c == '\''){
+                    if(temp.length()!=0){
+                        work2.append((char) Integer.parseInt(String.valueOf(temp)));
+                        temp = new StringBuffer();}
+                    work2.append(c);
+                    continue; }
+                else{
+                    work2.append(c);
+                    continue;} }
+            else if(Character.isDigit(c)){
+                temp.append(c);
+                continue; }
+            else if(Character.isLetter(c)){
+                if(temp.length()!=0){
+                    work2.append((char) Integer.parseInt(String.valueOf(temp)));
+                    temp = new StringBuffer();
+                    work2.append(c);
+                    continue; }
+                else{
+                    work2.append(c);
+                    continue;
+                }} }
+        if(temp.length()!=0){
+            work2.append((char) Integer.parseInt(String.valueOf(temp))); }
+        StringBuffer decipher=new StringBuffer(work2.reverse());
+        for(int i = 0; i < work2.length(); i++) {
+            if(Character.isLowerCase(work2.charAt(i))) {
+                decipher.setCharAt(i, Character.toUpperCase(work2.charAt(i))); }
+            else if(Character.isUpperCase(work2.charAt(i))) {
+                decipher.setCharAt(i, Character.toLowerCase(work2.charAt(i))); }}
+        return new String(decipher).replaceAll("\\*"," ");
+    }
+}
+
+public class Solution {
+    
+    public static void main(String[] args){
+        Scanner readInput = new Scanner(System.in);
+        String normal=readInput.nextLine();
+        String ciphered=readInput.nextLine();
+        
+        CipherDecipher cipherOrDecipher = new CipherDecipher();
+        System.out.println(cipherOrDecipher.ciphering(normal));
+        System.out.println(cipherOrDecipher.deciphering(ciphered));
+        
+        
+
+    }
+    
+}
